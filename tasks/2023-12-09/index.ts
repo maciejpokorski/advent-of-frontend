@@ -5,21 +5,22 @@ export interface Tool {
 }
 
 export class Equipment {
-    private tool: Tool | undefined
+    private tools: Array<Tool> = [];
 
     registerTools(tool: Tool) {
-        this.tool = tool
+        this.tools.push(tool)
     }
 
     initializeTools() {
-        this.tool?.init()
+        console.log(this.tools)
+        this.tools.forEach(tool => tool.init());
     }
 
     updateTools() {
-        this.tool?.update()
+        this.tools.forEach(tool => tool.update());
     }
 
     disposeTools() {
-        this.tool?.dispose()
+        this.tools.forEach(tool => tool.dispose());
     }
 }
