@@ -1,23 +1,39 @@
+enum ToolState {
+    initialized
+}
 export interface Tool {
     init: Function;
     update: Function;
     dispose: Function;
 }
 
+interface EquipmentTool extends Tool {
+  state: ToolState;
+}
+
 export class Equipment {
-    private tools: Array<Tool> = [];
+    private tools: Array<EquipmentTool> = [];
 
     registerTools(tool: Tool) {
-        this.tools.push(tool)
+        const equipmentTool = tool as EquipmentTool; 
+        this.tools.push(equipmentTool);
     }
 
     initializeTools() {
-        console.log(this.tools)
-        this.tools.forEach(tool => tool.init());
+        this.tools.forEach(tool => {
+            tool.init();
+            tool.state = ToolState.initialized;
+        });
     }
 
     updateTools() {
-        this.tools.forEach(tool => tool.update());
+        this.tools.forEach(tool => {
+            if (tool.state !== ToolState.initialized){
+                throw 'Cannot update any tools before initialization.';
+            }
+
+            tool.update();
+        });
     }
 
     disposeTools() {
